@@ -2,14 +2,15 @@ var express = require('express');
 
 var app = express();
 
-var port = 3000;
+var port = process.env.PORT || 3000;
 
 app.use(express.static('public'));
+app.set('views', 'src/views');
 
-app.use(express.static('src/views'));
+app.set('view engine', 'ejs');
 
 app.get('/', function(req, res) {
-    res.send('hi there!');
+    res.render('index', {title: 'Hello from app.js...', list: ['about', 'home', 'contact']});
 });
 
 app.get('/books', function(req, res) {
