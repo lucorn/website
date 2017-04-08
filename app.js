@@ -1,6 +1,22 @@
 var express = require('express');
-
 var app = express();
+
+var sql = require('mssql');
+var config = {
+    user: 'cornellupu',
+    password: 'Piramidal0',
+    server: 'zpeoik8c7r.database.windows.net',
+    database: 'chessm8_db',
+    options: {
+        encrypt: true
+    }
+};
+
+sql.connect(config, function (err) {
+    if (err !== null) {
+        console.log(err);
+    }
+});
 
 var port = process.env.PORT || 3000;
 
