@@ -1,28 +1,28 @@
 var express = require('express');
-var usersRouter = express.Router();
+var gamesRouter = express.Router();
 var sql = require('mssql');
 
 var router = function(nav) {
 
-    usersRouter.route('/')
+    gamesRouter.route('/')
         .get(function(req, res) {
             var request = new sql.Request();
 
-            request.query('select * from [User]', function (err, data) {
-                res.render('users', {
-                    title: 'Users in chessm8',
+            request.query('select * from [Game]', function (err, data) {
+                res.render('games', {
+                    title: 'Games in chessm8',
                     nav: nav,
-                    users: data.recordset
+                    games: data.recordset
                 });
             });
         });
 
-    usersRouter.route('/:id')
+    gamesRouter.route('/:id')
         .all(function (req, res, next) {
             var id = req.params.id;
             var ps = new sql.PreparedStatement();
             ps.input('id', sql.BigInt);
-            ps.prepare('select * from [User] where id = @id', function (err) {
+            ps.prepare('select * from [Game] where id = @id', function (err) {
                 if (err) {
                     console.log(err);
                     res.status(404).send('Failed to prepare');
@@ -36,23 +36,23 @@ var router = function(nav) {
                     }
                     if (data.recordset.length === 0) {
                         console.log(err);
-                        res.status(404).send('User not found');
+                        res.status(404).send('Game not found');
                         return;
                     }
-                    req.user = data.recordset[0];
+                    req.game = data.recordset[0];
                     next();
                 });
             });
         })
         .get(function(req, res) {
-            res.render('userView', {
-                title: 'A user',
+            res.render('gameView', {
+                title: 'A game',
                 nav: nav,
-                user: req.user
+                game: req.game
             });
         });
 
-    return usersRouter;
+    return gamesRouter;
 };
 
 module.exports = router;
