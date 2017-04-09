@@ -1,6 +1,8 @@
 var express = require('express');
 var app = express();
 
+var bodyParser = require('body-parser');
+
 var sql = require('mssql');
 var config = {
     user: 'cornellupu',
@@ -20,16 +22,21 @@ sql.connect(config, function (err) {
 
 var port = process.env.PORT || 3000;
 
-var nav = [{Link: '/Books', Text: 'Book'}, {Link: '/Authors', Text: 'Author'}];
+var nav = [{Link: '/Users', Text: 'Users'}, {Link: '/Games', Text: 'Games'}];
 
-var bookRouter = require('./src/routes/bookRoutes')(nav);
+var usersRouter = require('./src/routes/usersRoutes')(nav);
+var searchRouter = require('./src/routes/searchRoutes')(nav);
 
 app.use(express.static('public'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded());
+
 app.set('views', 'src/views');
 
 app.set('view engine', 'ejs');
 
-app.use('/Books', bookRouter);
+app.use('/Users', usersRouter);
+app.use('/Search', searchRouter);
 
 app.get('/', function(req, res) {
     res.render('index', {

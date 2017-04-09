@@ -1,5 +1,5 @@
 var express = require('express');
-var bookRouter = express.Router();
+var usersRouter = express.Router();
 var sql = require('mssql');
 
 var router = function(nav) {
@@ -18,20 +18,20 @@ var router = function(nav) {
         }
     ];
 
-    bookRouter.route('/')
+    usersRouter.route('/')
         .get(function(req, res) {
             var request = new sql.Request();
 
             request.query('select * from [User]', function (err, data) {
-                res.render('books', {
-                    title: 'Hello  for books',
+                res.render('users', {
+                    title: 'Users in chessm8',
                     nav: nav,
-                    books: data.recordset
+                    users: data.recordset
                 });
             });
         });
 
-    bookRouter.route('/:id')
+    usersRouter.route('/:id')
         .all(function (req, res, next) {
             var id = req.params.id;
             var ps = new sql.PreparedStatement();
@@ -59,14 +59,14 @@ var router = function(nav) {
             });
         })
         .get(function(req, res) {
-            res.render('bookView', {
-                title: 'A book',
+            res.render('userView', {
+                title: 'A user',
                 nav: nav,
                 user: req.user
             });
         });
 
-    return bookRouter;
+    return usersRouter;
 };
 
 module.exports = router;
